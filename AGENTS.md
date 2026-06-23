@@ -37,3 +37,17 @@ xvfb-run -a ~/Unity/Hub/Editor/6000.0.77f1/Editor/Unity \
   -batchmode -nographics -quit -logFile /dev/stdout \
   -createProject /tmp/HelloUnity
 ```
+
+### Feishu (飞书) desktop client
+
+The ByteDance Feishu Linux desktop client is installed:
+
+- **Package** `bytedance-feishu-stable` `7.66.11-0` (installed from the official `.deb`).
+- **Binaries**: `/usr/bin/bytedance-feishu` (and `/opt/bytedance/feishu/bytedance-feishu`).
+
+Non-obvious notes:
+
+- Feishu is an Electron GUI app. There is no display server in this VM, so launch it under a virtual display: `xvfb-run -a /opt/bytedance/feishu/bytedance-feishu --no-sandbox --disable-gpu &`. The `--no-sandbox` flag is required inside the container; `--disable-gpu` avoids GPU init noise.
+- For actual interactive use (screenshots), launch it on the computer-use desktop with the same flags.
+- The app opens to a **QR-code login screen**; completing login (and any messaging "hello world") requires a real Feishu account (scan QR with the mobile app, or phone/email login). No credentials are provisioned in this VM.
+- Get the latest Linux `.deb` download link dynamically (links are signed/expiring): `curl -s -A 'Mozilla/5.0' "https://www.feishu.cn/api/package_info?platform=10"` and read `.data.download_link` (platform `10` = x86_64, `12` = arm64). Feishu does not provide an apt repo, so it is not auto-upgraded.
